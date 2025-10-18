@@ -1,0 +1,72 @@
+/* src/pages/NichoDetalle.css */
+
+.nicho-detalle-page {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nicho-detalle-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(128, 128, 128, 0.05);
+  color: var(--text-primary);
+  border-color: var(--accent-color);
+}
+
+.dark .back-button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nicho-detalle-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Reglas para móviles */
+@media (max-width: 768px) {
+  .nicho-detalle-header {
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .back-button {
+    position: static; /* Quita el posicionamiento absoluto */
+    transform: none;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nicho-detalle-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+}

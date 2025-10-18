@@ -1,0 +1,15 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* opcional: utilidades propias */
+@layer utilities {
+  .animate-glowPulse {
+    animation: glow 2.4s ease-in-out infinite;
+  }
+  @keyframes glow {
+    0%,100% { opacity: .7 }
+    50%     { opacity: 1 }
+  }
+}

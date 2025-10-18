@@ -1,0 +1,248 @@
+/* src/components/ProductCard.css */
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-55%) scale(1.03); }
+}
+
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.product-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 8, 42, 0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 8, 42, 0.1);
+}
+
+.dark .product-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-link { display: block; }
+
+.card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background-color: #f8f9fa;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img { transform: scale(1.05); }
+
+.card-content {
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-id {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(2px);
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 0.6rem;
+  border-radius: 4px;
+  font-family: 'Roboto Mono', monospace;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.product-id:hover { background: rgba(0,0,0,0.5); }
+
+.dark .product-id { background: rgba(255,255,255,0.1); }
+.dark .product-id:hover { background: rgba(0,0,0,0.2); }
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.4;
+  height: 45px;
+  overflow: hidden;
+  padding-right: 40px;
+}
+
+.meta-and-sales {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 0.75rem;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;   /* ← menos espacio entre datos y la barra */
+}
+
+.product-meta-grid { display: grid; gap: 0.2rem; }
+
+.product-meta {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.product-meta span { opacity: 0.8; white-space: nowrap; }
+.product-meta strong { color: var(--text-primary); font-weight: 600; }
+
+.provider-link { text-decoration: none; color: inherit; }
+.provider-link:hover strong { text-decoration: underline; color: var(--accent-color); }
+
+.product-meta-price strong { color: var(--accent-color); }
+
+.sales-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: linear-gradient(45deg, var(--accent-color), #ff5e00);
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+  white-space: nowrap;
+}
+.dark .sales-pill { box-shadow: 0 4px 15px rgba(255, 140, 0, 0.25); }
+.sales-pill svg { width: 14px; height: 14px; }
+
+/* ===== Barra de demanda ===== */
+.demand-bar {
+  position: absolute;
+  bottom: 80px; /* sube/baja la barra en la tarjeta */
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  padding: 0 0.9rem;
+  box-sizing: border-box;
+}
+
+.bar-container { position: relative; width: 100%; height: 6px; }
+.bar-track { width: 100%; height: 100%; background-color: #e9ecef; border-radius: 3px; }
+.dark .bar-track { background-color: #000000; }
+
+.bar-fill {
+  position: absolute;
+  top: 0; left: 0; height: 100%;
+  background: linear-gradient(90deg, #b3e5fc, #03a9f4);
+  border-radius: 3px;
+  transition: width 0.5s ease-out;
+  z-index: 1;
+}
+
+/* Camión más grande y correcto */
+.demand-truck {
+  position: absolute;
+  top: -2px;              /* baja el camión respecto al centro */
+  width: 60px;            /* más visible */
+  height: auto;           /* corregido: antes sin “px” */
+  transform: translateY(-50%);
+  transition: left 0.5s ease-out;
+  animation: bounce 2s infinite ease-in-out;
+  z-index: 2;
+  will-change: left, transform;
+}
+
+/* Etiqueta “% Demanda” un poco más abajo */
+.demand-label {
+  position: absolute;
+  right: 0.9rem;
+  top: 6px;              /* antes 10px */
+  color: var(--accent-color-naranja);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ===== Gráfico (negro) ===== */
+.sales-graph {
+  position: relative;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* después */
+.sales-graph svg {
+  width: 100%;
+  height: 60px;
+  overflow: hidden;    /* ← evita que la línea/tooltip se salgan */
+  cursor: crosshair;
+}
+
+/* Línea en negro */
+.sales-graph-line {
+  stroke: #fa7000;           /* negro */
+  stroke-width: 1.6;
+  filter: drop-shadow(0 0 2px rgba(247, 114, 5, 0.938));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: draw-line 1.6s ease-out forwards;
+}
+
+/* Área tenue en negro mediante gradiente */
+.sales-graph-area .gradient-start { stop-color: #111; stop-opacity: 0.18; }
+.sales-graph-area .gradient-end   { stop-color: #111; stop-opacity: 0.04; }
+
+/* Tracker y puntos */
+.graph-tracker-line      { stroke: rgb(241, 238, 19); stroke-width: 1; stroke-dasharray: 2 2; }
+.sales-graph-point-solid { fill: #111; }
+.sales-graph-point-pulse { fill: none; stroke: #111; opacity: .45; animation: pulse 1.5s infinite ease-out; }
+
+/* Tooltip del gráfico */
+.graph-tooltip {
+  position: absolute;
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  opacity: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+/* Detalles extra */
+.product-meta span { opacity: .7; }
+.product-meta strong { font-weight: 700; }
+
+.product-meta .badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 145, 0, .12);
+  border: 1px solid rgba(255,145,0,.35);
+  font-size: .75rem;
+  line-height: 1.2;
+}

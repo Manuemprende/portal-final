@@ -1,0 +1,65 @@
+/* src/pages/ProveedorDetalle.css */
+
+.proveedor-detalle-page { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Banner del Proveedor (sin cambios mayores) */
+.proveedor-info-banner { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2.5rem; box-shadow: 0 4px 15px rgba(0, 8, 42, 0.05); }
+.info-top { display: flex; align-items: center; gap: 1.5rem; }
+.banner-logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-color-naranja); }
+.provider-details { display: flex; flex-direction: column; flex-grow: 1; }
+.provider-title-line { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.provider-name { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+.provider-main-stats { display: flex; gap: 1rem; }
+.main-stat-item { display: flex; align-items: center; gap: 0.5rem; background-color: var(--bg-color); padding: 0.5rem 1rem; border-radius: 8px; color: var(--text-secondary); }
+.dark .main-stat-item { background-color: #0c1015; }
+.main-stat-item strong { font-weight: 600; font-size: 1rem; color: var(--text-primary); }
+.main-stat-item span { font-size: 0.85rem; }
+
+/* --- NUEVO ENCABEZADO DE CONTROLES --- */
+.page-controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.back-button { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: none; padding: 0; color: var(--text-secondary); font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; transition: color 0.3s ease; }
+.back-button:hover { color: var(--text-primary); }
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* --- SECCIONES DE PRODUCTOS --- */
+.products-section { margin-bottom: 3rem; }
+.top-sellers-section { padding-bottom: 3rem; border-bottom: 1px solid var(--border-color); }
+.section-title { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); margin: 0; }
+
+.category-filter { position: relative; }
+.category-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.6rem 2.5rem 0.6rem 1rem; font-family: 'Poppins', sans-serif; font-size: 0.9rem; color: var(--text-primary); cursor: pointer; transition: border-color 0.2s ease; min-width: 200px; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.7rem center; background-repeat: no-repeat; background-size: 1.2em; }
+.category-select:hover { border-color: var(--accent-color); }
+.category-select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2); }
+.dark .category-select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); }
+
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.no-products-message { text-align: center; color: var(--text-secondary); font-size: 1.1rem; padding: 3rem 0; grid-column: 1 / -1; }
+
+@media (max-width: 992px) {
+  .proveedor-info-banner { padding: 1.5rem; }
+  .info-top { flex-direction: column; align-items: flex-start; }
+  .provider-name { font-size: 1.6rem; }
+}
+
+@media (max-width: 768px) {
+  .proveedor-info-banner { padding: 1rem; }
+  .banner-logo { width: 70px; height: 70px; }
+  .provider-name { font-size: 1.5rem; }
+  .page-controls-header { justify-content: center; }
+  .back-button { display: none; /* Ocultamos el botón de texto en móvil para dar espacio */ }
+  .filter-container { flex-direction: column; text-align: center; gap: 0.5rem; }
+}

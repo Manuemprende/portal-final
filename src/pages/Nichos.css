@@ -1,0 +1,135 @@
+/* src/pages/Nichos.css */
+
+.nichos-page {
+  /* --- CAMBIO 1: TÍTULO MÁS ARRIBA --- */
+  padding: 0.1rem 2.5rem 2.5rem; /* Se reduce el padding superior de 2.5rem a 1.5rem */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nichos-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.nichos-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.nichos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.nicho-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 8, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.nicho-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 8, 42, 0.1);
+  border-color: var(--accent-color-naranja);
+}
+
+.dark .nicho-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.nicho-card .nicho-icon {
+  color: var(--accent-color-naranja);
+  margin-bottom: 1rem;
+}
+
+.nicho-card .nicho-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.nicho-card .nicho-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  flex-grow: 1; 
+}
+
+.nicho-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  /* --- CAMBIO 2: LÍNEA DIVISORIA NARANJA EN MODO DÍA --- */
+  border-top: 1px solid var(--accent-color-naranja);
+}
+
+/* En modo oscuro, la línea vuelve a ser del color del borde para un look más sutil */
+.dark .nicho-stats {
+  border-top-color: var(--border-color);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s ease; /* Transición suave para el cambio de color */
+}
+
+/* --- CAMBIO 3: VALORES NARANJAS EN MODO OSCURO --- */
+.dark .stat-value {
+  color: var(--accent-color-naranja);
+  /* Efecto de brillo para darle el toque "flúor" */
+  text-shadow: 0 0 8px rgba(255, 140, 0, 0.4);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- REGLAS DE RESPONSIVIDAD (SIN CAMBIOS, YA ESTABAN BIEN) --- */
+@media (max-width: 768px) {
+  .nichos-page {
+    padding: 1rem 0.5rem 0.5rem; /* Ajuste para que el título no quede tan pegado arriba en móvil */
+  }
+
+  .nichos-title {
+    font-size: 2rem;
+  }
+
+  .nichos-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .nichos-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,159 @@
+/* src/pages/Proveedores.css */
+
+.proveedores-page {
+  padding: 1.5rem 2.5rem 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.proveedores-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.proveedores-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.proveedores-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.proveedor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 8, 42, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer; /* <<< --- AÑADIDO PARA INDICAR QUE ES CLICABLE --- */
+}
+
+.proveedor-row:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 8px 25px rgba(0, 8, 42, 0.08);
+  border-color: var(--accent-color);
+}
+
+.dark .proveedor-row:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.proveedor-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-basis: 40%;
+}
+
+.proveedor-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+.proveedor-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.proveedor-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.proveedor-rating .star-icon {
+  color: #facc15;
+}
+
+.proveedor-stats {
+  display: flex;
+  gap: 2.5rem;
+  flex-basis: 40%;
+  justify-content: center;
+}
+
+.proveedor-cta {
+  flex-basis: 20%;
+  text-align: right;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--accent-color-naranja);
+  border-color: var(--accent-color-naranja);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255,140,0,0.3);
+}
+
+/* --- REGLAS DE RESPONSIVIDAD --- */
+@media (max-width: 992px) {
+  .proveedor-stats {
+    display: none;
+  }
+  .proveedor-info { flex-basis: 70%; }
+  .proveedor-cta { flex-basis: 30%; }
+}
+
+@media (max-width: 768px) {
+  .proveedores-page {
+    padding: 1.5rem;
+  }
+  
+  .proveedor-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .proveedor-stats {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .proveedor-cta {
+    width: 100%;
+  }
+
+  .cta-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
