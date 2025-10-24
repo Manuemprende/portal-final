@@ -1,13 +1,13 @@
 // src/components/CountryPicker.tsx
-import React, { useEffect, useState } from 'react';
-import { fetchCountries, CountryRow } from '../services/countries';
+import { useEffect, useState } from 'react';
+import { fetchCountries, type CountryRow } from '../services/countries';
 
 type Props = {
   value?: string;                       // ISO-2 (ej: 'CL')
   onChange?: (code: string) => void;
 };
 
-const CountryPicker: React.FC<Props> = ({ value = 'CL', onChange }) => {
+export default function CountryPicker({ value = 'CL', onChange }: Props) {
   const [items, setItems] = useState<CountryRow[]>([]);
   const [open, setOpen] = useState(false);
 
@@ -44,5 +44,3 @@ const CountryPicker: React.FC<Props> = ({ value = 'CL', onChange }) => {
     </div>
   );
 };
-
-export default CountryPicker;

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../services/supabaseClient"; // ajusta la ruta si tu cliente está en otro lado
 
 type Member = {

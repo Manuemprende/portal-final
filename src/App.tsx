@@ -166,11 +166,7 @@ export default function App() {
 
   const handleEntrar = () => {
     if (autorizado) {
-      // Si es admin, mostramos la bienvenida especial; si no, dashboard directo
       if (isAdmin) {
-        // nos quedamos en la misma vista (admin-welcome) hasta que toque botones
-        // no hacemos setShowDashboard aquí
-        // solo retornamos para que se renderice admin-welcome
         return;
       }
       setShowDashboard(true);
@@ -179,11 +175,13 @@ export default function App() {
 
   // Si no es admin y ya está autorizado → Dashboard
   if (showDashboard && autorizado && !isAdmin) {
+    sessionStorage.setItem("isAdmin", "0");
     return <Dashboard />;
   }
 
   // Si es admin y está autorizado → Bienvenida Admin
   if (autorizado && isAdmin) {
+    sessionStorage.setItem("isAdmin", "1");
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-sky-100 via-blue-100 to-indigo-100 dark:from-[#0E1A2E] dark:via-[#0A1530] dark:to-black">
         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 p-6">

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial } from "@react-three/drei";

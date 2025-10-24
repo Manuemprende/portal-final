@@ -2,22 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import { ShoppingBag, Heart, Home, PawPrint, Gamepad2, Wrench, Package, BarChart2 } from 'lucide-react';
 import './Nichos.css';
-import { fetchCategoriesSummary, type CategorySummaryRow } from '../services/hot';
+import { fetchHotProducts, HotProduct } from '../services/hot';
+import { useCountryStore } from '../state/useCountry'; // Import country store
 
-// Estructura del nicho que usamos en la app
 export interface Nicho {
-  id: number;           // interno (índice)
-  name: string;         // nombre visible (category)
-  description: string;  // texto corto
-  icon: JSX.Element;    // ícono
-  productCount: number; // products
-  totalSales: number;   // si más adelante lo obtienes; por ahora 0
+  id: number;
+  name: string;
+  description: string;
+  icon: JSX.Element;
+  productCount: number;
+  providerCount: number; // Changed from totalSales to providerCount
 }
 
 interface NichosProps {
   onNicheSelect: (nicho: Nicho) => void;
 }
 
+// (iconFor and descriptionFor functions remain the same)
 const iconFor = (category: string) => {
   const c = category.toLowerCase();
   if (c.includes('moda')) return <ShoppingBag size={40} className="nicho-icon" />;
@@ -26,7 +27,6 @@ const iconFor = (category: string) => {
   if (c.includes('mascota')) return <PawPrint size={40} className="nicho-icon" />;
   if (c.includes('tecno') || c.includes('gamer')) return <Gamepad2 size={40} className="nicho-icon" />;
   if (c.includes('herram')) return <Wrench size={40} className="nicho-icon" />;
-  // default:
   return <Package size={40} className="nicho-icon" />;
 };
 
@@ -41,18 +41,43 @@ const descriptionFor = (category: string) => {
   return 'Productos destacados de este nicho.';
 };
 
+
 const Nichos: React.FC<NichosProps> = ({ onNicheSelect }) => {
-  const [cats, setCats] = useState<CategorySummaryRow[]>([]);
+  const [nichos, setNichos] = useState<Nicho[]>([]);
   const [loading, setLoading] = useState(true);
+  const { country } = useCountryStore(); // Get selected country
 
   useEffect(() => {
+    setLoading(true);
     (async () => {
-      setLoading(true);
-      const data = await fetchCategoriesSummary();
-      setCats(data);
+      const products = await fetchHotProducts({ country, limit: 1000 }); // Fetch by country
+      
+      // Group products by category to create summaries
+      const summary: { [key: string]: { products: Set<number>, providers: Set<number> } } = {};
+
+      products.forEach(p => {
+        const cat = p.category_name;
+        if (!cat) return; // Skip products without category
+        if (!summary[cat]) {
+          summary[cat] = { products: new Set(), providers: new Set() };
+        }
+        if(p.prod_id) summary[cat].products.add(p.prod_id);
+        if(p.provider_id) summary[cat].providers.add(p.provider_id);
+      });
+
+      const calculatedNichos: Nicho[] = Object.keys(summary).map((name, idx) => ({
+        id: idx + 1,
+        name,
+        description: descriptionFor(name),
+        icon: iconFor(name),
+        productCount: summary[name].products.size,
+        providerCount: summary[name].providers.size,
+      }));
+
+      setNichos(calculatedNichos);
       setLoading(false);
     })();
-  }, []);
+  }, [country]); // Re-run when country changes
 
   return (
     <div className="nichos-page">
@@ -63,36 +88,25 @@ const Nichos: React.FC<NichosProps> = ({ onNicheSelect }) => {
 
       {!loading && (
         <div className="nichos-grid">
-          {cats.map((row, idx) => {
-            const nicho: Nicho = {
-              id: idx + 1,
-              name: row.category,
-              description: descriptionFor(row.category),
-              icon: iconFor(row.category),
-              productCount: row.products,
-              totalSales: 0, // si luego tenemos ventas por categoría, lo mapeamos aquí
-            };
-            return (
-              <div key={`${row.category}-${idx}`} className="nicho-card" onClick={() => onNicheSelect(nicho)}>
-                {nicho.icon}
-                <h3 className="nicho-name">{nicho.name}</h3>
-                <p className="nicho-description">{nicho.description}</p>
-
-                <div className="nicho-stats">
-                  <div className="stat-item">
-                    <Package size={20} />
-                    <span className="stat-value">{nicho.productCount}</span>
-                    <span className="stat-label">Productos</span>
-                  </div>
-                  <div className="stat-item">
-                    <BarChart2 size={20} />
-                    <span className="stat-value">{(row.providers ?? 0).toLocaleString('es-CL')}</span>
-                    <span className="stat-label">Proveedores</span>
-                  </div>
+          {nichos.map((nicho) => (
+            <div key={nicho.id} className="nicho-card" onClick={() => onNicheSelect(nicho)}>
+              {nicho.icon}
+              <h3 className="nicho-name">{nicho.name}</h3>
+              <p className="nicho-description">{nicho.description}</p>
+              <div className="nicho-stats">
+                <div className="stat-item">
+                  <Package size={20} />
+                  <span className="stat-value">{nicho.productCount}</span>
+                  <span className="stat-label">Productos</span>
+                </div>
+                <div className="stat-item">
+                  <BarChart2 size={20} />
+                  <span className="stat-value">{nicho.providerCount}</span>
+                  <span className="stat-label">Proveedores</span>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getSessionProfile } from "../services/auth";
+import { checkUserSession } from "../services/auth";
 
 type Profile = {
   role: "admin" | "user";
@@ -17,7 +17,7 @@ export default function AdminWelcome() {
 
   useEffect(() => {
     (async () => {
-      const { user, profile } = await getSessionProfile();
+      const { user, profile } = await checkUserSession();
       if (!user || !profile) {
         navigate("/"); // sin sesión → al inicio normal
         return;
@@ -94,6 +94,12 @@ export default function AdminWelcome() {
               className="inline-flex items-center justify-center rounded-xl px-5 py-3 bg-blue-900/40 text-white font-semibold hover:bg-blue-900/50 transition border border-white/20"
             >
               Ver Productos Hot
+            </button>
+            <button
+              onClick={() => navigate("/admin/payments")}
+              className="inline-flex items-center justify-center rounded-xl px-5 py-3 bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition shadow"
+            >
+              Gestión de Pagos
             </button>
           </div>
 

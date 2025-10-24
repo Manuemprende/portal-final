@@ -1,82 +1,61 @@
 // src/pages/NichoDetalle.tsx
-import React, { useEffect, useRef, useState } from 'react';
-import ProductCard, { Product } from '../components/ProductCard';
-import { fetchHotProducts } from '../services/hot';
+import React, { useEffect, useState } from 'react';
+import ProductCard from '../components/ProductCard';
+import { fetchHotProducts, HotProduct } from '../services/hot'; // Import HotProduct type
 import './NichoDetalle.css';
 
 type Props = {
   nicho: { id: number; name: string };
   onBack: () => void;
   darkMode: boolean;
-  countryCode?: string; // para filtrar por país cuando la vista lo tenga
+  countryCode?: string;
 };
 
-const PAGE = 30;
-
 const NichoDetalle: React.FC<Props> = ({ nicho, onBack, darkMode, countryCode }) => {
-  const [items, setItems] = useState<Product[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const watcher = useRef<HTMLDivElement | null>(null);
+  const [items, setItems] = useState<HotProduct[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // reset al cambiar categoría/país
   useEffect(() => {
-    setItems([]);
-    setOffset(0);
-    setHasMore(true);
-  }, [nicho.name, countryCode]);
-
-  // carga
-  useEffect(() => {
-    if (!hasMore || loading) return;
+    setLoading(true);
     (async () => {
-      setLoading(true);
-      const page = await fetchHotProducts({
-        offset,
-        limit: PAGE,
-        category: nicho.name,
-        countryCode,
-      });
-      setItems((prev) => prev.concat(page));
-      setHasMore(page.length === PAGE);
-      setOffset((prev) => prev + page.length);
+      // Fetch all products, then filter by category client-side
+      const allProducts = await fetchHotProducts({ country: countryCode, limit: 200 });
+      const filteredProducts = allProducts.filter(p => p.category_name === nicho.name);
+      
+      setItems(filteredProducts);
       setLoading(false);
     })();
-  }, [offset, nicho.name, countryCode]); // eslint-disable-line
+  }, [nicho.name, countryCode]);
 
-  // infinite scroll
-  useEffect(() => {
-    if (!watcher.current) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const [e] = entries;
-        if (e.isIntersecting && !loading && hasMore) {
-          setOffset((o) => o);
-          setTimeout(() => setOffset((o) => o), 0);
-        }
-      },
-      { rootMargin: '600px' }
-    );
-    io.observe(watcher.current);
-    return () => io.disconnect();
-  }, [loading, hasMore]);
+  // The ProductCard expects a `Product` type, which might be different.
+  // We need to map HotProduct to what ProductCard expects.
+  // Let's create a compatible object on the fly.
+  const toCardProduct = (p: HotProduct) => ({
+    productId: p.prod_id || p.product_id || p.id || -1,
+    name: p.name,
+    imageUrl: p.image_url || p.picture || '',
+    price: p.price,
+    sales7d: p.sales_7d,
+    rank: p.hot_rank || p.rank,
+    href: '#', // HotProduct doesn't have a direct href
+  });
 
   return (
     <div className="nicho-detalle">
       <button className="back-btn" onClick={onBack}>← Volver a Nichos</button>
       <h2 className="nicho-title">{nicho.name}</h2>
 
-      <section className="products-grid">
-        {items.map((p) => (
-          <ProductCard key={`${p.productId}-${p.href || ''}`} product={p} darkMode={darkMode} />
-        ))}
-      </section>
-
-      <div ref={watcher} />
-      {loading && <div className="loading-more">Cargando…</div>}
-      {!loading && items.length === 0 && <div className="empty">Sin productos en esta categoría.</div>}
-      {!hasMore && items.length > 0 && <div className="no-more">No hay más productos</div>}
+      {loading ? (
+        <div className="loading-more">Cargando…</div>
+      ) : items.length > 0 ? (
+        <section className="products-grid">
+          {items.map((p) => (
+            <ProductCard key={`${p.prod_id}-${p.provider_id}`} product={toCardProduct(p)} darkMode={darkMode} />
+          ))}
+        </section>
+      ) : (
+        <div className="empty">Sin productos en esta categoría.</div>
+      )}
     </div>
   );
 };

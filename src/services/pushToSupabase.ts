@@ -1,12 +1,12 @@
 // src/services/pushToSupabase.ts
-import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY!; // <- tu var .env
+// Usamos import.meta.env para Vite
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL!;
+const SUPABASE_SERVICE_ROLE = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY!;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
-  throw new Error('Faltan SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY en el .env');
+  throw new Error('Faltan variables de entorno: VITE_SUPABASE_URL o VITE_SUPABASE_SERVICE_ROLE_KEY');
 }
 
 export const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {

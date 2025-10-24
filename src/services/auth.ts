@@ -1,63 +1,38 @@
-export async function verificarUsuarioPorPedidos(email: string) {
-  const API_KEY = "secret-dev-key";
-  const API_BASE = "https://app.dropdrop.net/api/v1";
+// src/services/auth.ts
+import { createClient } from '@supabase/supabase-js';
 
-  try {
-    // 1️⃣ Buscar usuario por email
-    const userRes = await fetch(`${API_BASE}/usuarios?email=${email}`, {
-      headers: {
-        "X-API-Key": API_KEY,
-        "Accept": "application/json",
-      },
-    });
+// Accedemos a las variables de entorno con import.meta.env en Vite
+const url = import.meta.env.VITE_SUPABASE_URL!;
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY!;
 
-    if (!userRes.ok) throw new Error("Error al consultar usuarios");
-    const userData = await userRes.json();
+export const supabase = createClient(url, anon, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+});
 
-    const usuario = userData?.data?.items?.[0];
-    if (!usuario) {
-      return { autorizado: false, error: "Usuario no encontrado" };
-    }
+/** Magic link: solo correo */
+export async function signInWithEmail(email: string) {
+  return supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: `${window.location.origin}/` },
+  });
+}
 
-    const userId = usuario.id;
+/** Obtiene user + profile (role, allowed_countries, plan) */
+export async function checkUserSession() {
+  const { data: { user }, error: uerr } = await supabase.auth.getUser();
+  if (uerr || !user) return { user: null, profile: null };
 
-    // 2️⃣ Buscar pedidos (por rango de fechas amplio)
-    const today = new Date();
-    const start = "2025-08-01"; // puedes ajustar el rango a 30 días atrás
-    const end = today.toISOString().split("T")[0];
+  const { data: profile, error: perr } = await supabase
+    .from('profiles')
+    .select('role, allowed_countries, plan, email')
+    .eq('user_id', user.id)
+    .single();
 
-    const pedidosRes = await fetch(
-      `${API_BASE}/pedidos?start_date=${start}&end_date=${end}&per_page=100&page=1`,
-      {
-        headers: {
-          "X-API-Key": API_KEY,
-          "Accept": "application/json",
-        },
-      }
-    );
+  if (perr) return { user, profile: null };
+  return { user, profile };
+}
 
-    if (!pedidosRes.ok) throw new Error("Error al consultar pedidos");
-    const pedidosData = await pedidosRes.json();
-
-    const pedidos = pedidosData?.data?.items ?? [];
-
-    // 3️⃣ Filtrar pedidos del usuario que estén entregados
-    const pedidosUsuario = pedidos.filter(
-      (p: any) =>
-        (p.email === email || p.id_usuario === userId) &&
-        p.estado?.toLowerCase() === "entregado"
-    );
-
-    const entregados = pedidosUsuario.length;
-
-    // 4️⃣ Validar si puede acceder
-    if (entregados >= 5) {
-      return { autorizado: true, ventas: entregados, usuario };
-    } else {
-      return { autorizado: false, ventas: entregados };
-    }
-  } catch (err) {
-    console.error("❌ Error DropDrop Auth:", err);
-    return { autorizado: false, error: "Error al verificar usuario" };
-  }
+/** Cierra sesión */
+export async function signOut() {
+  await supabase.auth.signOut();
 }

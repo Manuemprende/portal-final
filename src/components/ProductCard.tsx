@@ -141,15 +141,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, darkMode }) => {
         rel="noopener noreferrer"
         className="card-img-link"
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          className="card-img"
+          <img
+            src={product.image}
+            alt={product.name}
+            className="card-img"
           onError={(e) => {
             e.currentTarget.src = '/logohot.png';
           }}
-        />
-      </a>
+          />
+        </a>
 
       <div className="card-content">
         <a
@@ -162,9 +162,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, darkMode }) => {
         </a>
 
         <h2 className="product-title">{product.name}</h2>
-
+        
         <div className="meta-and-sales">
-          <div className="product-meta-grid">
+        <div className="product-meta-grid">
             <p className="product-meta">
               <span>Proveedor</span>
               {product.providerUrl ? (
@@ -190,7 +190,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, darkMode }) => {
               <span>Categoría</span>{' '}
               <strong>{product.categoryName || 'Sin categoría'}</strong>
             </p>
-          </div>
+        </div>
 
           <div className="sales-pill" title="Ventas últimos 7 días">
             <svg
@@ -207,8 +207,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, darkMode }) => {
               <polyline points="17 6 23 6 23 12"></polyline>
             </svg>
             <span>{salesToShow} Ventas</span>
-          </div>
         </div>
+      </div>
       </div>
 
       <div className="demand-bar">
